@@ -25,8 +25,11 @@ public class ResultCode {
     // 错误响应
     // 服务器内部问题
     public static ResultCode INNER_ERROR = new ResultCode(50000, "服务器内部问题");
+    // token
+    public static ResultCode TOKEN_ERROR = new ResultCode(40001, "请登录后在使用系统");
     // 员工
     public static ResultCode EMPLOYEE_NOT_EXIST = new ResultCode(41001, "员工不存在");
     public static ResultCode PASSWORD_NOT_SUCESS = new ResultCode(41002, "密码不正确");
     public static ResultCode EMPLOYEE_HAS_BAN = new ResultCode(41003, "员工已经被禁止");
+    public static ResultCode EMPLOYEE_HAS_EXIST = new ResultCode(41004, "员工名称已经存在");
 }

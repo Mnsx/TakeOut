@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 import top.mnsx.take_out.dao.EmployeeDao;
 import top.mnsx.take_out.entity.Employee;
 import top.mnsx.take_out.service.EmployeeService;
-import top.mnsx.take_out.service.ex.EmployeeHasBanException;
-import top.mnsx.take_out.service.ex.EmployeeNotExistException;
-import top.mnsx.take_out.service.ex.InsertException;
-import top.mnsx.take_out.service.ex.PasswordNotSuccessException;
+import top.mnsx.take_out.service.ex.*;
 import top.mnsx.take_out.utils.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +35,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Employee::getUsername, username);
         return employeeDao.selectOne(queryWrapper);
+    }
+
+    @Override
+    public List<Employee> findEmployeeByName(String name) {
+        if (name.equals("null")) {
+            name = "";
+        }
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.likeRight(Employee::getName, name);
+        queryWrapper.orderByDesc(Employee::getUpdateTime);
+        return employeeDao.selectList(queryWrapper);
     }
 
     @Override
@@ -67,9 +76,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Map<String, String> map = new HashMap<>();
         map.put("loginTime", TimeUtil.LDTToString(LocalDateTime.now()));
         map.put("id", String.valueOf(employee.getId()));
+        map.put("info", JSON.toJSONString(employee));
         String token = JWTUtil.getToken(map);
         // 将员工id存放进入redis
-        Boolean ifSuccess = redisUtil.hSet("onlineEmployee", String.valueOf(employee.getId()), JSON.toJSONString(employee));
+        Boolean ifSuccess = redisUtil.hSet("onlineEmployee", String.valueOf(employee.getId()), JSON.toJSONString(employee), (long) 60 * 60 * 24);
         if (!ifSuccess) {
             throw new InsertException();
         }
@@ -77,7 +87,46 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void clear(Integer id) {
+    public void clear(Long id) {
         redisUtil.hDel("onlineEmployee", String.valueOf(id));
     }
+
+    @Override
+    public void addEmployee(Employee employee) {
+        // 默认密码加密
+        employee.setPassword(MD5Util.inputPassToTPass("123123", null));
+        // 获取当前登录用户id
+        Long id = ((Employee) ThreadLocalUtil.get()).getId();
+
+        // 判断用户名是否存在
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Employee::getUsername, employee.getUsername());
+        Employee emp = employeeDao.selectOne(queryWrapper);
+        if (emp != null) {
+            throw new EmployeeHasExistException();
+        }
+
+        // 设置创建事件
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        // 设置创建者信息
+        employee.setCreateUser(id);
+        employee.setUpdateUser(id);
+        // main
+        employeeDao.insert(employee);
+    }
+
+    @Override
+    public void update(Employee employee) {
+        Long id = ((Employee) ThreadLocalUtil.get()).getId();
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(id);
+        employeeDao.updateById(employee);
+    }
+
+    @Override
+    public Employee getById(Long id) {
+        return employeeDao.selectById(id);
+    }
+
 }

@@ -30,4 +30,15 @@ public class JSONUtil {
     public static String mapToJson(ResultMap result) {
         return JSON.toJSONString(result);
     }
+
+    /**
+     * 将json转换程对象
+     * @param json 字符串
+     * @param aClass 返回类型
+     * @return 返回对象
+     * @param <T> 对象类型
+     */
+    public static <T> T jsonToObj(String json, Class<T> aClass) {
+        return JSON.parseObject(json, aClass);
+    }
 }

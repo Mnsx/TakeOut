@@ -5,10 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import top.mnsx.take_out.entity.ResultCode;
 import top.mnsx.take_out.entity.ResultMap;
-import top.mnsx.take_out.service.ex.EmployeeHasBanException;
-import top.mnsx.take_out.service.ex.EmployeeNotExistException;
-import top.mnsx.take_out.service.ex.PasswordNotSuccessException;
-import top.mnsx.take_out.service.ex.ServiceException;
+import top.mnsx.take_out.service.ex.*;
 import top.mnsx.take_out.utils.JSONUtil;
 
 /**
@@ -30,11 +27,13 @@ public class BaseController {
             resultCode = ResultCode.PASSWORD_NOT_SUCESS;
         } else if (e instanceof EmployeeHasBanException) {
             resultCode = ResultCode.EMPLOYEE_HAS_BAN;
+        } else if (e instanceof TokenErrorException) {
+            resultCode = ResultCode.TOKEN_ERROR;
+        } else if (e instanceof EmployeeHasExistException) {
+            resultCode = ResultCode.EMPLOYEE_HAS_EXIST;
         } else {
             resultCode = ResultCode.INNER_ERROR;
         }
-
-        log.info("error: {}", e.getCause());
 
         return JSONUtil.mapToJson(ResultMap.fail(resultCode));
     }
