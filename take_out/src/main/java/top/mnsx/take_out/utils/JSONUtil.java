@@ -1,7 +1,7 @@
 package top.mnsx.take_out.utils;
 
 import com.alibaba.fastjson.JSON;
-import top.mnsx.take_out.entity.ResultMap;
+import top.mnsx.take_out.component.ResultMap;
 
 import java.util.Map;
 

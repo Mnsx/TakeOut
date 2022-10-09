@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.mnsx.take_out.annotation.UnAuth;
 import top.mnsx.take_out.entity.Employee;
-import top.mnsx.take_out.entity.ResultMap;
+import top.mnsx.take_out.component.ResultMap;
 import top.mnsx.take_out.service.EmployeeService;
 import top.mnsx.take_out.utils.JSONUtil;
 import top.mnsx.take_out.vo.DataVo;

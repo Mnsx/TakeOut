@@ -3,10 +3,9 @@ package top.mnsx.take_out.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.util.UUID;
 
@@ -54,5 +53,23 @@ public class ImageUtil {
         }
 
         return fileName;
+    }
+
+    public static void downloadFile(HttpServletResponse response, String path) {
+        try (
+                FileInputStream fileInputStream = new FileInputStream(path);
+                ServletOutputStream outputStream = response.getOutputStream();
+        ) {
+            int len = 0;
+            byte[] bytes = new byte[1024];
+            while ((len = fileInputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, len);
+                outputStream.flush();
+            }
+            outputStream.close();
+            fileInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

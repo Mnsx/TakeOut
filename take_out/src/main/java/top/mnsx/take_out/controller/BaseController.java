@@ -3,8 +3,8 @@ package top.mnsx.take_out.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
-import top.mnsx.take_out.entity.ResultCode;
-import top.mnsx.take_out.entity.ResultMap;
+import top.mnsx.take_out.component.ResultCode;
+import top.mnsx.take_out.component.ResultMap;
 import top.mnsx.take_out.service.ex.*;
 import top.mnsx.take_out.utils.JSONUtil;
 
@@ -24,14 +24,22 @@ public class BaseController {
         if (e instanceof EmployeeNotExistException) {
             resultCode = ResultCode.EMPLOYEE_NOT_EXIST;
         } else if (e instanceof PasswordNotSuccessException) {
-            resultCode = ResultCode.PASSWORD_NOT_SUCESS;
+            resultCode = ResultCode.PASSWORD_NOT_SUCCESS;
         } else if (e instanceof EmployeeHasBanException) {
             resultCode = ResultCode.EMPLOYEE_HAS_BAN;
         } else if (e instanceof TokenErrorException) {
             resultCode = ResultCode.TOKEN_ERROR;
         } else if (e instanceof EmployeeHasExistException) {
             resultCode = ResultCode.EMPLOYEE_HAS_EXIST;
-        } else {
+        } else if (e instanceof CategoryHasExistException) {
+            resultCode = ResultCode.CATEGORY_HAS_EXIST;
+        } else if (e instanceof CategoryBandingDishException) {
+            resultCode = ResultCode.CATEGORY_BANDING_DISH;
+        } else if (e instanceof CategoryBandingSetMealException) {
+            resultCode = ResultCode.CATEGORY_BANDING_SET_MEAL;
+        } else if (e instanceof DishNameHasExistException) {
+            resultCode = ResultCode.DISH_NAME_HAS_EXIST;
+        }else {
             resultCode = ResultCode.INNER_ERROR;
         }
 

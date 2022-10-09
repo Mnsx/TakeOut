@@ -106,12 +106,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmployeeHasExistException();
         }
 
-        // 设置创建事件
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        // 设置创建者信息
-        employee.setCreateUser(id);
-        employee.setUpdateUser(id);
         // main
         employeeDao.insert(employee);
     }
@@ -119,8 +113,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void update(Employee employee) {
         Long id = ((Employee) ThreadLocalUtil.get()).getId();
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(id);
         employeeDao.updateById(employee);
     }
 
