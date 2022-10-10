@@ -38,4 +38,5 @@ public class ResultCode {
     public static ResultCode CATEGORY_BANDING_SET_MEAL = new ResultCode(42003, "分类被套餐绑定，请处理套餐数据后，在进行操作");
     // 菜品
     public static ResultCode DISH_NAME_HAS_EXIST = new ResultCode(43001, "菜品已经被使用");
+    public static ResultCode DISH_BANDING_SET_MEAL = new ResultCode(43002, "菜品被套餐绑定，请处理套餐数据后，在进行操作");
 }

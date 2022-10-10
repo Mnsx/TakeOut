@@ -27,4 +27,10 @@ public interface DishService {
     Dish getById(Long id);
 
     void updateOne(DishDto dishDto);
+
+    void changeStatus(Integer status, Integer[] ids);
+
+    void delete(Integer[] ids);
+
+    List<Dish> list(Dish dish);
 }

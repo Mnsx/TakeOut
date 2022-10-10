@@ -3,6 +3,7 @@ package top.mnsx.take_out.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,10 +73,13 @@ public class DishController extends BaseController {
         PageInfo<Dish> pageInfo = new PageInfo<>(dishes);
         long total = pageInfo.getTotal();
         List<DishDto> dishDtos = dishes.stream().map((item) -> {
+            DishDto dishDto = new DishDto();
             Long categoryId = item.getCategoryId();
             Category category = categoryService.findById(categoryId);
             String categoryName = category.getName();
-            return new DishDto(item, categoryName);
+            dishDto.setCategoryName(categoryName);
+            BeanUtils.copyProperties(item, dishDto);
+            return dishDto;
         }).collect(Collectors.toList());
         DataVo<DishDto> dataVo = new DataVo<>(dishDtos, total);
         return JSONUtil.mapToJson(ResultMap.ok(dataVo));
@@ -88,16 +92,40 @@ public class DishController extends BaseController {
         Category category = categoryService.findById(categoryId);
         String name = category.getName();
         List<DishFlavor> byDishId = dishFlavorService.getByDishId(dish.getId());
-        DishDto dishDto = new DishDto(dish, name);
+        DishDto dishDto = new DishDto();
+        dishDto.setCategoryName(name);
+        BeanUtils.copyProperties(dish, dishDto);
         dishDto.setFlavors(byDishId);
 
         return JSONUtil.mapToJson(ResultMap.ok(dishDto));
     }
 
-    @PutMapping
-    public String update(@RequestBody DishDto dishDto) {
+    @PutMapping("/{id}")
+    public String update(@PathVariable("id") Long id, @RequestBody DishDto dishDto) {
+        dishDto.setId(id);
         dishService.updateOne(dishDto);
 
         return JSONUtil.mapToJson(ResultMap.ok());
+    }
+
+    @PostMapping("/status/{status}")
+    public String changeStatus(@PathVariable("status") Integer status, @RequestParam("ids") Integer[] ids) {
+        dishService.changeStatus(status, ids);
+
+        return JSONUtil.mapToJson(ResultMap.ok());
+    }
+
+    @DeleteMapping
+    public String delete(@RequestParam("ids") Integer[] ids) {
+        dishService.delete(ids);
+
+        return JSONUtil.mapToJson(ResultMap.ok());
+    }
+
+    @GetMapping("/list")
+    public String list(Dish dish) {
+        List<Dish> list = dishService.list(dish);
+
+        return JSONUtil.mapToJson(ResultMap.ok(list));
     }
 }

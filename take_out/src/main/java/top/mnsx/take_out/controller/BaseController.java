@@ -39,7 +39,9 @@ public class BaseController {
             resultCode = ResultCode.CATEGORY_BANDING_SET_MEAL;
         } else if (e instanceof DishNameHasExistException) {
             resultCode = ResultCode.DISH_NAME_HAS_EXIST;
-        }else {
+        } else if (e instanceof DishBandingSetMealException) {
+            resultCode = ResultCode.DISH_BANDING_SET_MEAL;
+        } else {
             resultCode = ResultCode.INNER_ERROR;
         }
 

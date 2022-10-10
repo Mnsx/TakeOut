@@ -1,6 +1,7 @@
 package top.mnsx.take_out.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.mnsx.take_out.dao.DishDao;
@@ -17,6 +18,7 @@ import java.util.List;
  * @Description:
  */
 @Service
+@Slf4j
 public class DishFlavorServiceImpl implements DishFlavorService {
     @Autowired
     private DishFlavorDao dishFlavorDao;

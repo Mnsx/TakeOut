@@ -1,59 +1,42 @@
 package top.mnsx.take_out.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- 菜品
+ * 套餐菜品关系
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Dish implements Serializable {
+public class SetMealDish implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
 
-    //菜品名称
+    //套餐id
+    private Long setMealId;
+
+
+    //菜品id
+    private Long dishId;
+
+
+    //菜品名称 （冗余字段）
     private String name;
 
-
-    //菜品分类id
-    private Long categoryId;
-
-
-    //菜品价格
+    //菜品原价
     private BigDecimal price;
 
-
-    //商品码
-    private String code;
-
-
-    //图片
-    private String image;
+    //份数
+    private Integer copies;
 
 
-    //描述信息
-    private String description;
-
-
-    //0 停售 1 起售
-    private Integer status;
-
-
-    //顺序
+    //排序
     private Integer sort;
 
 

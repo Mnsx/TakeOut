@@ -1,6 +1,7 @@
 package top.mnsx.take_out.interceptor;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpMethod;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Description: 登录拦截器
  */
 @Component
+@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     private RedisUtil redisUtil;

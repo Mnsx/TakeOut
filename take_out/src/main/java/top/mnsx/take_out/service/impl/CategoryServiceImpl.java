@@ -76,6 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> list(Category category) {
         LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(category != null, Category::getType, category.getType());
+        wrapper.eq(Category::getIsDeleted, 0);
         wrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
         return categoryDao.selectList(wrapper);
     }
